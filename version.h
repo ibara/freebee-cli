@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, 2024 Brian Callahan <bcallah@openbsd.org>
+ * Copyright (c) 2020-2022, 2024-2025 Brian Callahan <bcallah@openbsd.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,4 +14,4 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#define VERSION "3.0"
+#define VERSION "3.1"

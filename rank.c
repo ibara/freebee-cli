@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, 2024 Brian Callahan <bcallah@openbsd.org>
+ * Copyright (c) 2020-2022, 2024-2025 Brian Callahan <bcallah@openbsd.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -13,8 +13,6 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
-#include <stdio.h>
 
 #include "freebee.h"
 
@@ -50,7 +48,6 @@ void
 set_rank(void)
 {
 
-	puts("hello");
 	novice = total * 0.02;
 	fine = total * 0.05;
 	skilled = total * 0.08;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020-2022, 2024 Brian Callahan <bcallah@openbsd.org>
+ * Copyright (c) 2020-2022, 2024-2025 Brian Callahan <bcallah@openbsd.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -44,23 +44,22 @@ static void
 print_board(void)
 {
 
-	printf("Free Bee %s | Score: %3d | Rank: %s\n\n",
-	    VERSION, points, rank());
-	printf("              %c\n", letters[1]);
-	printf("          %c       %c\n", letters[0], letters[2]);
-	printf("              %c\n", letters[6]);
-	printf("          %c       %c\n", letters[3], letters[5]);
-	printf("              %c\n\n", letters[4]);
+	(void) printf("Free Bee %s | Score: %3d | Rank: %s\n\n", VERSION,
+	    points, rank());
+	(void) printf("              %c\n", letters[1]);
+	(void) printf("          %c       %c\n", letters[0], letters[2]);
+	(void) printf("              %c\n", letters[6]);
+	(void) printf("          %c       %c\n", letters[3], letters[5]);
+	(void) printf("              %c\n\n", letters[4]);
 }
 
 static void
 show_answers(void)
 {
 	int i, printed = 8; /* Number of \n in heading */
-	size_t j, queens;
+	size_t j, queen_points;
 
-	putp(clear_screen);
-
+	(void) putp(clear_screen);
 	print_board();
 
 	for (i = 0; i < count; i++) {
@@ -70,38 +69,38 @@ show_answers(void)
 		if (++printed > rows - 3) {
 			while (getchar() != '\n')
 				;
-			putp(clear_screen);
+			(void) putp(clear_screen);
 			print_board();
 			printed = 8;
 		}
 	}
 
-	printf("\n");
+	(void) printf("\n");
 	if (++printed > rows - 3) {
 		while (getchar() != '\n')
 			;
-		putp(clear_screen);
+		(void) putp(clear_screen);
 		print_board();
 		printed = 8;
 	}
-	printf("Total words:  %d\n", count);
+	(void) printf("Total words:  %d\n", count);
 	if (++printed > rows - 3) {
 		while (getchar() != '\n')
 			;
-		putp(clear_screen);
+		(void) putp(clear_screen);
 		print_board();
 		printed = 8;
 	}
-	printf("Total points: %d\n", total);
+	(void) printf("Total points: %d\n", total);
 	if (++printed > rows - 3) {
 		while (getchar() != '\n')
 			;
-		putp(clear_screen);
+		(void) putp(clear_screen);
 		print_board();
 		printed = 8;
 	}
-	queens = total * 0.70;
-	printf("Points for Queen Bee: %zu\n", queens);
+	queen_points = total * 0.70;
+	(void) printf("Points for Queen Bee: %zu\n", queen_points);
 
 	while (getchar() != '\n')
 		;
@@ -112,30 +111,29 @@ show_found(void)
 {
 	int i, printed = 8;
 
-	putp(clear_screen);
-
+	(void) putp(clear_screen);
 	print_board();
 
 	for (i = 0; i < found; i++) {
-		printf("%s\n", foundlist[i]);
+		(void) printf("%s\n", foundlist[i]);
 		if (++printed > rows - 3) {
 			while (getchar() != '\n')
 				;
-			putp(clear_screen);
+			(void) putp(clear_screen);
 			print_board();
 			printed = 8;
 		}
 	}
 
-	printf("\n");
+	(void) printf("\n");
 	if (++printed > rows - 3) {
 		while (getchar() != '\n')
 			;
-		putp(clear_screen);
+		(void) putp(clear_screen);
 		print_board();
 		printed = 8;
 	}
-	printf("Words found: %d\n", found);
+	(void) printf("Words found: %d\n", found);
 
 	while (getchar() != '\n')
 		;
@@ -147,7 +145,7 @@ check(char *guess)
 	char *g;
 	int center = 0;
 
-	for (g = guess; *g != '\0'; g++) {
+	for (g = guess; *g != '\0'; ++g) {
 		if (!isalpha((unsigned char) *g))
 			return 0;
 		if (isupper((unsigned char) *g))
@@ -157,14 +155,14 @@ check(char *guess)
 	}
 
 	if (strlen(guess) < 4) {
-		printf("Too short!\n");
+		(void) printf("Too short\n");
 		while (getchar() != '\n')
 			;
 		return 0;
 	}
 
 	if (center == 0) {
-		printf("Must use center letter\n");
+		(void) printf("Missing center letter\n");
 		while (getchar() != '\n')
 			;
 		return 0;
@@ -219,7 +217,7 @@ add_points(const char *guess)
 
 	if (one && two && three && four && five && six) {
 		points += strlen(guess) + 7;
-		printf("Pangram!\n");
+		(void) printf("Pangram!\n");
 		while (getchar() != '\n')
 			;
 	} else {
@@ -234,7 +232,7 @@ found_word(const char *guess)
 
 	for (i = 0; i < found; i++) {
 		if (!strcmp(guess, foundlist[i])) {
-			printf("Word already found\n");
+			(void) printf("Already found\n");
 			while (getchar() != '\n')
 				;
 			return;
@@ -260,7 +258,7 @@ find_word(const char *guess)
 		}
 	}
 
-	printf("Word not in list\n");
+	(void) printf("Not in dictionary\n");
 	while (getchar() != '\n')
 		;
 }
@@ -280,30 +278,33 @@ play_game(void)
 	(void) memset(foundlist, 0, sizeof(foundlist));
 
 	while (1) {
-		putp(clear_screen);
+		(void) putp(clear_screen);
 
 		print_board();
 
 		if (qfirst == 0 && !strcmp(rank(), "Queen Bee!")) {
-			printf("You have earned the rank of Queen Bee and won the game!\n");
-			printf("You may continue playing. Can you find all the words?\n\n");
+			(void) printf("You have earned the rank of Queen Bee");
+			(void) printf(" and won the game!\n");
+			(void) printf("You may continue playing. Can you ");
+			(void) printf("find all the words?\n\n");
 
 			qfirst = 1;
 		}
 
 		if (afirst == 0 && found == count) {
-			printf("Congratulations! You found all the words!\n\n");
+			(void) printf("Congratulations! You found all the ");
+			(void) printf("words!\n\n");
 
 			afirst = 1;
 		}
 
-		printf("? to shuffle\n");
-		printf("! to display found words\n");
-		printf("& to display answers\n");
-		printf("%% to start a new game\n");
-		printf("; to quit\n\n");
+		(void) printf("? to shuffle\n");
+		(void) printf("! to display found words\n");
+		(void) printf("& to display answers\n");
+		(void) printf("%% to start a new game\n");
+		(void) printf("; to quit\n\n");
 
-		printf("Enter a word: ");
+		(void) printf("Enter a word: ");
 		(void) fgets(guess, sizeof(guess), stdin);
 		guess[strlen(guess) - 1] = '\0';
 
